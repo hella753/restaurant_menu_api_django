@@ -5,7 +5,7 @@ from rest_framework.mixins import (
     CreateModelMixin,
     RetrieveModelMixin,
     ListModelMixin,
-    UpdateModelMixin
+    UpdateModelMixin, DestroyModelMixin
 )
 from restaurant.serializers import *
 from restaurant.models import Restaurant, Category, Subcategory, Menu, Dish
