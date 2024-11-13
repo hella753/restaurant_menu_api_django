@@ -1,0 +1,8 @@
+.idea/
+__pycache__/
+restaurant_menu_app/__pycache__/
+restaurant/__pycache__/
+restaurant/migrations/__pycache__/
+user/__pycache__/
+user/migrations/__pycache__/
+.venv/
