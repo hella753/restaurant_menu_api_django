@@ -22,7 +22,11 @@ class CategoryViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
-        if self.action == "update" or self.action == "destroy" or self.action == "partial_update":
+        if (
+                self.action == "update" or
+                self.action == "destroy" or
+                self.action == "partial_update"
+        ):
             return [IsTheUserWhoCreated("category")]
         return super().get_permissions()
 
@@ -46,7 +50,11 @@ class SubcategoryViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
-        if self.action == "update" or self.action == "destroy" or self.action == "partial_update":
+        if (
+                self.action == "update" or
+                self.action == "destroy" or
+                self.action == "partial_update"
+        ):
             return [IsTheUserWhoCreated("subcategory")]
         return super().get_permissions()
 
@@ -64,7 +72,11 @@ class DishViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
-        if self.action == "update" or self.action == "destroy" or self.action == "partial_update":
+        if (
+                self.action == "update" or
+                self.action == "destroy" or
+                self.action == "partial_update"
+        ):
             return [IsTheUserWhoCreated("dish")]
         return super().get_permissions()
 
@@ -82,7 +94,11 @@ class RestaurantViewSet(ModelViewSet):
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
-        if self.action == "update" or self.action == "destroy" or self.action == "partial_update":
+        if (
+                self.action == "update" or
+                self.action == "destroy" or
+                self.action == "partial_update"
+        ):
             return [IsTheUserWhoCreated("restaurant")]
         return super().get_permissions()
 
@@ -96,6 +112,15 @@ class RestaurantViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
 
-class CreateIngredientViewSet(CreateModelMixin, DestroyModelMixin, GenericViewSet):
+class CreateIngredientViewSet(CreateModelMixin,
+                              DestroyModelMixin,
+                              GenericViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.all()
+
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAuthenticated()]
+        if self.action == "destroy":
+            return [IsTheUserWhoCreated("ingredient")]
+        return super().get_permissions()

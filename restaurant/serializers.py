@@ -29,7 +29,9 @@ class CategoryAllFieldsSerializer(ModelSerializer):
     def validate(self, data):
         validated_data = super().validate(data)
         restaurant = validated_data.get("restaurant")
-        restaurants = Restaurant.objects.filter(user=self.context.get("request").user)
+        restaurants = Restaurant.objects.filter(
+            user=self.context.get("request").user
+        )
         if restaurant not in restaurants:
             raise ValidationError(
                 f"You do not have the access to this restaurant"
@@ -45,7 +47,9 @@ class IngredientSerializer(ModelSerializer):
     def validate(self, data):
         validated_data = super().validate(data)
         dish = validated_data.get("dish")
-        dishes = Dish.objects.filter(category__parent__restaurant__user=self.context.get("request").user)
+        dishes = Dish.objects.filter(
+            category__parent__restaurant__user=self.context.get("request").user
+        )
         if dish not in dishes:
             raise ValidationError(
                 f"You do not have the access to this dish"
@@ -69,7 +73,9 @@ class DishAllFieldsSerializer(ModelSerializer):
     def validate(self, data):
         validated_data = super().validate(data)
         category = validated_data.get("category")
-        categories = Subcategory.objects.filter(parent__restaurant__user=self.context.get("request").user)
+        categories = Subcategory.objects.filter(
+            parent__restaurant__user=self.context.get("request").user
+        )
         if category not in categories:
             raise ValidationError(
                 f"You do not have the access to this subcategory"
@@ -91,10 +97,11 @@ class SubcategoryAllFieldsSerializer(ModelSerializer):
     def validate(self, data):
         validated_data = super().validate(data)
         parent = validated_data.get("parent")
-        categories = Category.objects.filter(restaurant__user=self.context.get("request").user)
+        categories = Category.objects.filter(
+            restaurant__user=self.context.get("request").user
+        )
         if parent not in categories:
             raise ValidationError(
                 f"You do not have the access to this category"
             )
         return validated_data
-
