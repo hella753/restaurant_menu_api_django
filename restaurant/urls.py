@@ -9,5 +9,6 @@ router = DefaultRouter()
 router.register(r'category', CategoryViewSet, basename='category')
 router.register(r'subcategory', SubcategoryViewSet, basename='subcategory')
 router.register(r'restaurants', RestaurantViewSet, basename='restaurants')
-router.register(r'menu', MenuViewSet, basename='menu')
+router.register(r'dish', DishViewSet, basename='dish')
+router.register(r'ingredient', CreateIngredientViewSet, basename='ingredient')
 urlpatterns = router.urls

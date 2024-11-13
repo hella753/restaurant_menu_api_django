@@ -1,17 +1,12 @@
 from django.contrib.auth import login
-from rest_framework import mixins
 from rest_framework.decorators import permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import ModelViewSet
 from user.models import User
 from user.serializers import RegistrationSerializer
 
 
-class UserViewSet(mixins.CreateModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  GenericViewSet):
+class UserViewSet(ModelViewSet):
     serializer_class = RegistrationSerializer
     queryset = User.objects.all()
 
