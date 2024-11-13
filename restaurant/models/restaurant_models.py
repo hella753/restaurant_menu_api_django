@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import ForeignKey
 from django.utils.translation import gettext_lazy as _
 from versatileimagefield.fields import VersatileImageField
 
@@ -22,21 +23,12 @@ class Restaurant(models.Model):
         null=True,
         verbose_name=_("გარეკანის ფოტოსურათი")
     )
+    user = ForeignKey(
+        "user.User",
+        on_delete=models.CASCADE,
+        related_name='restaurant',
+        verbose_name=_("მომხმარებელი")
+    )
 
     def __str__(self):
         return self.name
-
-
-class Menu(models.Model):
-    dish = models.ManyToManyField(
-        "Dish",
-        related_name='menus',
-        verbose_name=_("კერძი"),
-    )
-    restaurant = models.ForeignKey(
-        "Restaurant",
-        verbose_name=_("რესტორანი"),
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True
-    )

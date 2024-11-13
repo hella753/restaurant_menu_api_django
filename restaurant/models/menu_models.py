@@ -15,6 +15,12 @@ class Category(models.Model):
         null=True,
         verbose_name=_("გარეკანის ფოტოსურათი")
     )
+    restaurant = models.ForeignKey(
+        "Restaurant",
+        on_delete=models.CASCADE,
+        related_name='categories',
+        verbose_name=_("რესტორანი")
+    )
 
     def __str__(self):
         return self.name
