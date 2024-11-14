@@ -47,7 +47,12 @@ class SubcategoryViewSet(ModelViewSet):
     filter_backends = [CustomFilterBackend]
 
     def retrieve(self, request, *args, **kwargs):
-        qs = Dish.objects.prefetch_related(
+        qs = Dish.objects.select_related(
+            "category",
+            "category__parent",
+            "category__parent__restaurant",
+            "category__parent__restaurant__user"
+        ).prefetch_related(
             "ingredients"
         ).filter(
             category_id=kwargs.get("pk")
@@ -86,8 +91,6 @@ class DishViewSet(ModelViewSet):
         "category__parent",
         "category__parent__restaurant",
         "category__parent__restaurant__user",
-    ).prefetch_related(
-        "ingredients"
     )
 
     def get_permissions(self):
@@ -140,7 +143,9 @@ class CreateIngredientViewSet(CreateModelMixin,
                               DestroyModelMixin,
                               GenericViewSet):
     serializer_class = IngredientSerializer
-    queryset = Ingredient.objects.all()
+    queryset = Ingredient.objects.select_related(
+        "dish__category__parent__restaurant__user"
+    )
 
     def get_permissions(self):
         if self.action == "create":
