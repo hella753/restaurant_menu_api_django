@@ -10,6 +10,9 @@ class RestaurantSerializer(ModelSerializer):
 
 
 class RestaurantAllFieldsSerializer(ModelSerializer):
+    """
+    For creation/update endpoints
+    """
     class Meta:
         model = Restaurant
         exclude = ["user"]
@@ -22,6 +25,9 @@ class CategorySerializer(ModelSerializer):
 
 
 class CategoryAllFieldsSerializer(ModelSerializer):
+    """
+    For creation/update endpoints
+    """
     class Meta:
         model = Category
         exclude = ["user"]
@@ -40,6 +46,9 @@ class CategoryAllFieldsSerializer(ModelSerializer):
 
 
 class IngredientSerializer(ModelSerializer):
+    """
+    For creation/update endpoints
+    """
     class Meta:
         model = Ingredient
         exclude = ["user"]
@@ -48,7 +57,7 @@ class IngredientSerializer(ModelSerializer):
         validated_data = super().validate(data)
         dish = validated_data.get("dish")
         dishes = Dish.objects.filter(
-            category__parent__restaurant__user=self.context.get("request").user
+            user=self.context.get("request").user
         )
         if dish not in dishes:
             raise ValidationError(
@@ -66,6 +75,9 @@ class DishSerializer(ModelSerializer):
 
 
 class DishAllFieldsSerializer(ModelSerializer):
+    """
+    For creation/update endpoints
+    """
     class Meta:
         model = Dish
         exclude = ["user"]
@@ -74,7 +86,7 @@ class DishAllFieldsSerializer(ModelSerializer):
         validated_data = super().validate(data)
         category = validated_data.get("category")
         categories = Subcategory.objects.filter(
-            parent__restaurant__user=self.context.get("request").user
+            user=self.context.get("request").user
         )
         if category not in categories:
             raise ValidationError(
@@ -90,6 +102,9 @@ class SubcategorySerializer(ModelSerializer):
 
 
 class SubcategoryAllFieldsSerializer(ModelSerializer):
+    """
+    For creation/update endpoints
+    """
     class Meta:
         model = Subcategory
         exclude = ["user"]
@@ -98,7 +113,7 @@ class SubcategoryAllFieldsSerializer(ModelSerializer):
         validated_data = super().validate(data)
         parent = validated_data.get("parent")
         categories = Category.objects.filter(
-            restaurant__user=self.context.get("request").user
+            user=self.context.get("request").user
         )
         if parent not in categories:
             raise ValidationError(
