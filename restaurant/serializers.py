@@ -85,6 +85,17 @@ class DishAllFieldsSerializer(ModelSerializer):
     def validate(self, data):
         validated_data = super().validate(data)
         category = validated_data.get("category")
+        ingredients = validated_data.get("ingredients")
+        user_ingredients = Ingredient.objects.filter(
+            user=self.context.get("request").user
+        )
+
+        for ingredient in ingredients:
+            if ingredient not in user_ingredients:
+                raise ValidationError(
+                    f"You do not have the access to this Ingredients"
+                )
+
         categories = Subcategory.objects.filter(
             user=self.context.get("request").user
         )
