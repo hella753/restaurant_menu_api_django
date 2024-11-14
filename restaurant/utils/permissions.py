@@ -10,22 +10,18 @@ class IsTheUserWhoCreated(BasePermission):
         super().__init__()
 
     def has_permission(self, request, view):
-        if self.view_name == "restaurant":
-            user_who_created = view.get_object().user
-        elif self.view_name == "category":
-            user_who_created = view.get_object().restaurant.user
-        elif self.view_name == "subcategory":
-            user_who_created = view.get_object().parent.restaurant.user
-        elif self.view_name == "dish":
-            user_who_created = (view.get_object()
-                                .category
-                                .parent
-                                .restaurant.user)
-        elif self.view_name == "ingredient":
-            user_who_created = (view.get_object()
-                                .dish.category
-                                .parent
-                                .restaurant.user)
+        current = view.get_object()
+        match self.view_name:
+            case "restaurant":
+                user_who_created = current.user
+            case "category":
+                user_who_created = current.restaurant.user
+            case "subcategory":
+                user_who_created = current.parent.restaurant.user
+            case "dish":
+                user_who_created = current.category.parent.restaurant.user
+            case "ingredient":
+                user_who_created = current.dish.category.parent.restaurant.user
         return bool(
             request.user == user_who_created and request.user.is_authenticated
         )
