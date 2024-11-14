@@ -91,6 +91,8 @@ class DishViewSet(ModelViewSet):
         "category__parent",
         "category__parent__restaurant",
         "category__parent__restaurant__user",
+    ).prefetch_related(
+        "ingredients"
     )
 
     def get_permissions(self):

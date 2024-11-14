@@ -17,7 +17,6 @@ class IsTheUserWhoCreated(BasePermission):
                 if current:
                     user_who_created = current.user
             case "category":
-                print(current)
                 if current:
                     user_who_created = current.restaurant.user
             case "subcategory":
