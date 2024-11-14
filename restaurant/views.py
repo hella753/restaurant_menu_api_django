@@ -1,4 +1,4 @@
-from rest_framework.mixins import CreateModelMixin, DestroyModelMixin
+from rest_framework.mixins import CreateModelMixin, DestroyModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
@@ -81,11 +81,13 @@ class SubcategoryViewSet(ModelViewSet):
 
 class DishViewSet(ModelViewSet):
     serializer_class = DishSerializer
-    queryset = Dish.objects.all().select_related(
+    queryset = Dish.objects.select_related(
         "category",
         "category__parent",
         "category__parent__restaurant",
         "category__parent__restaurant__user",
+    ).prefetch_related(
+        "ingredients"
     )
 
     def get_permissions(self):
@@ -134,6 +136,7 @@ class RestaurantViewSet(ModelViewSet):
 
 
 class CreateIngredientViewSet(CreateModelMixin,
+                              RetrieveModelMixin,
                               DestroyModelMixin,
                               GenericViewSet):
     serializer_class = IngredientSerializer
