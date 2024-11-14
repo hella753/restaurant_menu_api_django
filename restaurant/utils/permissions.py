@@ -4,6 +4,7 @@ from rest_framework.permissions import BasePermission
 class IsTheUserWhoCreated(BasePermission):
     """
     Allows access only to the user who created the object.
+    Works if only restaurant has the user field.
     """
     def __init__(self, view_name):
         self.view_name = view_name

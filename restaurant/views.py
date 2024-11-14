@@ -6,14 +6,14 @@ from restaurant.serializers import *
 from restaurant.models import Restaurant, Category, Subcategory, Dish
 from restaurant.utils.filter_backends import CustomFilterBackend
 from restaurant.utils import CategoryFilter
-from restaurant.utils.permissions import IsTheUserWhoCreated
+from restaurant.utils.permissions_v2 import IsTheUserWhoCreated
 
 
 class CategoryViewSet(ModelViewSet):
     serializer_class = CategorySerializer
     queryset = Category.objects.select_related(
         "restaurant",
-        "restaurant__user"
+        "user"
     )
 
     def get_serializer_class(self):
@@ -21,6 +21,9 @@ class CategoryViewSet(ModelViewSet):
             return CategoryAllFieldsSerializer
         else:
             return super().get_serializer_class()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_permissions(self):
         if self.action == "create":
@@ -30,7 +33,7 @@ class CategoryViewSet(ModelViewSet):
                 self.action == "destroy" or
                 self.action == "partial_update"
         ):
-            return [IsTheUserWhoCreated("category")]
+            return [IsTheUserWhoCreated()]
         else:
             return super().get_permissions()
 
@@ -38,20 +41,16 @@ class CategoryViewSet(ModelViewSet):
 class SubcategoryViewSet(ModelViewSet):
     serializer_class = SubcategorySerializer
     queryset = Subcategory.objects.select_related(
-        "parent",
-        "parent__restaurant",
-        "parent__restaurant__user",
+        "user",
+        "parent"
     )
-
     filterset_class = CategoryFilter
     filter_backends = [CustomFilterBackend]
 
     def retrieve(self, request, *args, **kwargs):
         qs = Dish.objects.select_related(
+            "user",
             "category",
-            "category__parent",
-            "category__parent__restaurant",
-            "category__parent__restaurant__user"
         ).prefetch_related(
             "ingredients"
         ).filter(
@@ -65,6 +64,9 @@ class SubcategoryViewSet(ModelViewSet):
         )
         return Response(serializer.data)
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
@@ -73,7 +75,7 @@ class SubcategoryViewSet(ModelViewSet):
                 self.action == "destroy" or
                 self.action == "partial_update"
         ):
-            return [IsTheUserWhoCreated("subcategory")]
+            return [IsTheUserWhoCreated()]
         else:
             return super().get_permissions()
 
@@ -87,13 +89,14 @@ class SubcategoryViewSet(ModelViewSet):
 class DishViewSet(ModelViewSet):
     serializer_class = DishSerializer
     queryset = Dish.objects.select_related(
-        "category",
-        "category__parent",
-        "category__parent__restaurant",
-        "category__parent__restaurant__user",
+        "user",
+        "category"
     ).prefetch_related(
         "ingredients"
     )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_permissions(self):
         if self.action == "create":
@@ -103,7 +106,7 @@ class DishViewSet(ModelViewSet):
                 self.action == "destroy" or
                 self.action == "partial_update"
         ):
-            return [IsTheUserWhoCreated("dish")]
+            return [IsTheUserWhoCreated()]
         else:
             return super().get_permissions()
 
@@ -135,7 +138,7 @@ class RestaurantViewSet(ModelViewSet):
                 self.action == "destroy" or
                 self.action == "partial_update"
         ):
-            return [IsTheUserWhoCreated("restaurant")]
+            return [IsTheUserWhoCreated()]
         else:
             return super().get_permissions()
 
@@ -146,13 +149,16 @@ class CreateIngredientViewSet(CreateModelMixin,
                               GenericViewSet):
     serializer_class = IngredientSerializer
     queryset = Ingredient.objects.select_related(
-        "dish__category__parent__restaurant__user"
+        "user"
     )
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
     def get_permissions(self):
         if self.action == "create":
             return [IsAuthenticated()]
         elif self.action == "destroy":
-            return [IsTheUserWhoCreated("ingredient")]
+            return [IsTheUserWhoCreated()]
         else:
             return super().get_permissions()

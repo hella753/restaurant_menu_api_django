@@ -21,6 +21,11 @@ class Category(models.Model):
         related_name='categories',
         verbose_name=_("რესტორანი")
     )
+    user = models.ForeignKey(
+        "user.User",
+        on_delete=models.CASCADE,
+        verbose_name=_("მომხმარებელი")
+    )
 
     def __str__(self):
         return self.name
@@ -45,6 +50,11 @@ class Subcategory(models.Model):
         blank=True,
         null=True,
         verbose_name=_("გარეკანის ფოტოსურათი")
+    )
+    user = models.ForeignKey(
+        "user.User",
+        on_delete=models.CASCADE,
+        verbose_name=_("მომხმარებელი")
     )
 
     def __str__(self):
@@ -72,6 +82,11 @@ class Dish(models.Model):
         related_name='dishes',
         verbose_name=_("კატეგორია")
     )
+    user = models.ForeignKey(
+        "user.User",
+        on_delete=models.CASCADE,
+        verbose_name=_("მომხმარებელი")
+    )
 
     def __str__(self):
         return self.name
@@ -89,6 +104,11 @@ class Ingredient(models.Model):
         related_name='ingredients',
         verbose_name=_("კერძი"),
         null=True
+    )
+    user = models.ForeignKey(
+        "user.User",
+        on_delete=models.CASCADE,
+        verbose_name=_("მომხმარებელი")
     )
 
     def __str__(self):

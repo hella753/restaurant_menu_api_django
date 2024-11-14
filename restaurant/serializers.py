@@ -24,7 +24,7 @@ class CategorySerializer(ModelSerializer):
 class CategoryAllFieldsSerializer(ModelSerializer):
     class Meta:
         model = Category
-        fields = "__all__"
+        exclude = ["user"]
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -42,7 +42,7 @@ class CategoryAllFieldsSerializer(ModelSerializer):
 class IngredientSerializer(ModelSerializer):
     class Meta:
         model = Ingredient
-        fields = "__all__"
+        exclude = ["user"]
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -68,7 +68,7 @@ class DishSerializer(ModelSerializer):
 class DishAllFieldsSerializer(ModelSerializer):
     class Meta:
         model = Dish
-        fields = "__all__"
+        exclude = ["user"]
 
     def validate(self, data):
         validated_data = super().validate(data)
@@ -92,7 +92,7 @@ class SubcategorySerializer(ModelSerializer):
 class SubcategoryAllFieldsSerializer(ModelSerializer):
     class Meta:
         model = Subcategory
-        fields = "__all__"
+        exclude = ["user"]
 
     def validate(self, data):
         validated_data = super().validate(data)
