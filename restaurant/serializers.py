@@ -51,19 +51,7 @@ class IngredientSerializer(ModelSerializer):
     """
     class Meta:
         model = Ingredient
-        exclude = ["user"]
-
-    def validate(self, data):
-        validated_data = super().validate(data)
-        dish = validated_data.get("dish")
-        dishes = Dish.objects.filter(
-            user=self.context.get("request").user
-        )
-        if dish not in dishes:
-            raise ValidationError(
-                f"You do not have the access to this dish"
-            )
-        return validated_data
+        exclude = ["user", "id"]
 
 
 class DishSerializer(ModelSerializer):
