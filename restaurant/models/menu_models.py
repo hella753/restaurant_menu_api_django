@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import ManyToManyField
 from django.utils.translation import gettext_lazy as _
 from versatileimagefield.fields import VersatileImageField
 
@@ -21,11 +20,6 @@ class Category(models.Model):
         on_delete=models.CASCADE,
         related_name='categories',
         verbose_name=_("რესტორანი")
-    )
-    user = models.ForeignKey(
-        "user.User",
-        on_delete=models.CASCADE,
-        verbose_name=_("მომხმარებელი")
     )
 
     def __str__(self):
@@ -51,11 +45,6 @@ class Subcategory(models.Model):
         blank=True,
         null=True,
         verbose_name=_("გარეკანის ფოტოსურათი")
-    )
-    user = models.ForeignKey(
-        "user.User",
-        on_delete=models.CASCADE,
-        verbose_name=_("მომხმარებელი")
     )
 
     def __str__(self):
@@ -85,12 +74,8 @@ class Dish(models.Model):
     )
     ingredients = models.ManyToManyField(
         "Ingredient",
-        verbose_name=_("ინგრედიენტები")
-    )
-    user = models.ForeignKey(
-        "user.User",
-        on_delete=models.CASCADE,
-        verbose_name=_("მომხმარებელი")
+        verbose_name=_("ინგრედიენტები"),
+        blank=True
     )
 
     def __str__(self):
@@ -101,12 +86,8 @@ class Ingredient(models.Model):
     name = models.CharField(
         max_length=30,
         null=True,
+        blank=True,
         verbose_name=_("სახელი")
-    )
-    user = models.ForeignKey(
-        "user.User",
-        on_delete=models.CASCADE,
-        verbose_name=_("მომხმარებელი")
     )
 
     def __str__(self):
